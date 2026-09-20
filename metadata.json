@@ -1,0 +1,6 @@
+{
+  "name": "InsightEngine - Financial Report Analysis System",
+  "description": "AI-powered financial report analysis system with hybrid retrieval, table-aware indexing, deterministic calculation engine, and forensic accuracy.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
