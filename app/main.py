@@ -1,8 +1,11 @@
 """InsightEngine FastAPI Application Entry Point."""
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.logging import logger
 from app.api.health import router as health_router
@@ -30,6 +33,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / "dist"
+if (FRONTEND_DIST / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="frontend-assets")
+
 # Enable CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
@@ -49,6 +56,9 @@ app.include_router(jobs_router)
 @app.get("/")
 def root():
     """Provides a useful response when the backend base URL is opened directly."""
+    frontend_index = FRONTEND_DIST / "index.html"
+    if frontend_index.exists():
+        return FileResponse(frontend_index)
     return {
         "service": "InsightEngine Financial RAG",
         "status": "healthy",
